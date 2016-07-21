@@ -1,0 +1,23 @@
+{
+  "authors": [
+    "Signaturit"
+  ],
+  "description": "Signaturit SDK",
+  "version": "0.9.11-*",
+  "dependencies": {
+    "Flurl.Http": "1.0.0",
+    "Newtonsoft.Json": "9.0.1",
+    "System.Collections.Specialized": "4.0.1"
+  },
+  "frameworks": {
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0"
+        }
+      },
+      "imports": "dnxcore50"
+    }
+  }
+}
