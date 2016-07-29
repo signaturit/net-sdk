@@ -19,7 +19,7 @@ The recommended way to install the SDK is through [project.json](https://docs.mi
 
 Then instantiate the Client class passing in your API access token.
 
-```net
+```C#
 string accessToken = "OTllYjUwM2NhYmNjNmJlYTZlNWEzNWYzYmZjNTRiZWI2YjU0ZjUxNzUwZDRjZjEwZTA0ZTFkZWQwZGExNDM3ZQ";
 
 Signaturit.Client client = new Signaturit.Client(accessToken);
@@ -28,7 +28,7 @@ Signaturit.Client client = new Signaturit.Client(accessToken);
 Please note that by default the client will use our sandbox API. When you are
 ready to start using the production environment just get the correct access token and pass an additional argument to the constructor:
 
-```net
+```C#
 Signaturit.Client client = new Signaturit.Client(accessToken, true);
 ```
 
@@ -41,7 +41,7 @@ Examples
 
 Count your signature requests.
 
-```net
+```C#
 object response = client.countSignatures();
 ```
 
@@ -51,19 +51,19 @@ Retrieve all data from your signature requests using different filters.
 
 ##### All signatures
 
-```net
+```C#
 object response = client.getSignatures();
 ```
 
 ##### Getting the last 50 signatures
 
-```net
+```C#
 object response = client.getSignatures(50);
 ```
 
 ##### Getting signatures with custom field "crm_id"
 
-```net
+```C#
 object response = client.getSignatures(100, 0, new { crm_id = "CUSTOM_ID" })
 ```
 
@@ -71,7 +71,7 @@ object response = client.getSignatures(100, 0, new { crm_id = "CUSTOM_ID" })
 
 Get the information regarding a single signature request passing its ID.
 
-```net
+```C#
 object response = client.getSignature("a066298d-2877-11e4-b641-080027ea3a6e");
 ```
 
@@ -79,7 +79,7 @@ object response = client.getSignature("a066298d-2877-11e4-b641-080027ea3a6e");
 
 Create a new signature request.
 
-```net
+```C#
 object files = new [] {
     "./documents/contracts/receipt250.pdf"
 };
@@ -98,7 +98,7 @@ object response = client.createSignature(files, recipients, parameters);
 
 You can add custom info in your requests
 
-```net
+```C#
 object files = new [] {
     "./documents/contracts/receipt250.pdf"
 };
@@ -120,7 +120,7 @@ object response = client.createSignature(files, recipients, parameters);
 
 You can send templates with the fields filled
 
-```net
+```C#
 object recipients = new [] {
     new { name = "Mr John" , email = "john.doe@signaturit.com" }
 };
@@ -141,7 +141,7 @@ object response = client.createSignature(files, recipients, parameters);
 
 Cancel a signature request.
 
-```net
+```C#
 object response = client.cancelSignature("a066298d-2877-11e4-b641-080027ea3a6e");
 ```
 
@@ -149,7 +149,7 @@ object response = client.cancelSignature("a066298d-2877-11e4-b641-080027ea3a6e")
 
 Send a reminder email.
 
-```net
+```C#
 object response = client.sendReminder("a066298d-2877-11e4-b641-080027ea3a6e");
 ```
 
@@ -157,7 +157,7 @@ object response = client.sendReminder("a066298d-2877-11e4-b641-080027ea3a6e");
 
 Get the audit trail of a signature request document
 
-```net
+```C#
 string response = client.downloadAuditTrail("a066298d-2877-11e4-b641-080027ea3a6e", "d474a1eb-2877-11e4-b641-080027ea3a6e");
 ```
 
@@ -165,7 +165,7 @@ string response = client.downloadAuditTrail("a066298d-2877-11e4-b641-080027ea3a6
 
 Get the signed document of a signature request document
 
-```net
+```C#
 string response = client.downloadSignedDocument("a066298d-2877-11e4-b641-080027ea3a6e", "d474a1eb-2877-11e4-b641-080027ea3a6e");
 ```
 
@@ -175,7 +175,7 @@ string response = client.downloadSignedDocument("a066298d-2877-11e4-b641-080027e
 
 Get all account brandings.
 
-```net
+```C#
 object response = client.getBrandings();
 ```
 
@@ -183,7 +183,7 @@ object response = client.getBrandings();
 
 Get a single branding.
 
-```net
+```C#
 object response = client.getBranding("6472aad7-2877-11e4-b641-080027ea3a6e");
 ```
 
@@ -191,7 +191,7 @@ object response = client.getBranding("6472aad7-2877-11e4-b641-080027ea3a6e");
 
 Create a new branding.
 
-```net
+```C#
 object parameters = new {
     layout_color      = "#FFBF00",
     text_color        = "#2A1B0A",
@@ -205,7 +205,7 @@ object response = client.createBranding(parameters);
 
 Update a single branding.
 
-```net
+```C#
 object parameters = new {
     application_texts = new { send_button = "Send!" }
 };
@@ -219,7 +219,7 @@ object response = client.updateBranding("6472aad7-2877-11e4-b641-080027ea3a6e", 
 
 Retrieve all data from your templates.
 
-```net
+```C#
 object response = client.getTemplates();
 ```
 
@@ -229,19 +229,19 @@ object response = client.getTemplates();
 
 ####Get all certified emails
 
-```net
+```C#
 object response = client.getEmails()
 ```
 
 ####Get last 50 emails
 
-```net
+```C#
 object response = client.getEmails(50)
 ```
 
 ####Navigate through all emails in blocks of 50 results
 
-```net
+```C#
 object response = client.getEmails(50, 50)
 ```
 
@@ -249,7 +249,7 @@ object response = client.getEmails(50, 50)
 
 Count all certified emails
 
-```net
+```C#
 object response = client.countEmails()
 ```
 
@@ -257,7 +257,7 @@ object response = client.countEmails()
 
 Get a single email
 
-```net
+```C#
 object response = client.getEmail("EMAIL_ID")
 ```
 
@@ -265,7 +265,7 @@ object response = client.getEmail("EMAIL_ID")
 
 Create a new certified email.
 
-```net
+```C#
 object files = new [] {
     "./demo.pdf",
     "./receipt.pdf"
@@ -287,6 +287,6 @@ object response = client.createEmail(files, recipients, "NET subject", "NET body
 
 Get the audit trail document of an email request.
 
-```net
+```C#
 string response = client.downloadEmailAuditTrail("EMAIL_ID", "CERTIFICATE_ID")
 ```
