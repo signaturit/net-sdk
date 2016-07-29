@@ -62,6 +62,8 @@ namespace Signaturit
          */
         public object getSignatures(int limit = 100, int offset = 0, dynamic conditions = null)
         {
+            conditions = conditions == null ? new ExpandoObject() : dynamicToExpandoObject(conditions);
+
             conditions.limit  = limit;
             conditions.offset = offset;
 
@@ -117,7 +119,8 @@ namespace Signaturit
          */
         public object createSignature(object files, object recipients, dynamic parameters = null)
         {
-            parameters = parameters == null ? new ExpandoObject() : parameters;
+            parameters = parameters == null ? new ExpandoObject() : dynamicToExpandoObject(parameters);
+
             parameters.recipients = recipients;
 
             dynamic json = jsonRequest("post", "signatures.json", null, parameters, files);
@@ -142,7 +145,7 @@ namespace Signaturit
          *
          * @return dynamic
          */
-        public object sendSignatureReminder(string signatureId)
+        public object sendReminder(string signatureId)
         {
             dynamic json = jsonRequest("post", $"signatures/{signatureId}/reminder.json", null, null, null);
 
@@ -232,6 +235,8 @@ namespace Signaturit
          */
         public object getEmails(int limit = 100, int offset = 0, dynamic conditions = null)
         {
+            conditions = conditions == null ? new ExpandoObject() : dynamicToExpandoObject(conditions);
+
             conditions.limit  = limit;
             conditions.offset = offset;
 
@@ -262,7 +267,7 @@ namespace Signaturit
          */
         public object createEmail(object files, dynamic recipients, string subject, string body, dynamic parameters = null)
         {
-            parameters = parameters == null ? new ExpandoObject() : parameters;
+            parameters = parameters == null ? new ExpandoObject() : dynamicToExpandoObject(parameters);
 
             parameters.subject    = subject;
             parameters.body       = body;
@@ -284,6 +289,19 @@ namespace Signaturit
             string response = stringRequest("get", $"emails/{emailId}/certificates/{certificateId}/download/audit_trail", null, null, null);
 
             return response;
+        }
+
+        /**
+         * @param object input
+         *
+         * @return ExpandoObject
+         */
+        private ExpandoObject dynamicToExpandoObject(object input)
+        {
+            string json = JsonConvert.SerializeObject(input);
+            ExpandoObject output = JsonConvert.DeserializeObject<ExpandoObject>(json);
+
+            return output;
         }
 
         /**
@@ -413,6 +431,16 @@ namespace Signaturit
                     foreach (JToken subChild in child) {
                         captureMultipartContentInJson(content, subChild, valueKey);
                     }
+                }
+
+                return;
+            }
+
+            if (property.Value.GetType().Name == "JObject") {
+                string valueKey = key == "" ? property.Name : $"{key}[{property.Name}]";
+
+                foreach (JToken child in property.Values()) {
+                    captureMultipartContentInJson(content, child, valueKey);
                 }
 
                 return;

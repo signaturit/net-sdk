@@ -3,7 +3,10 @@
     "Signaturit"
   ],
   "description": "Signaturit SDK",
-  "version": "0.9.11-*",
+  "version": "0.9.12-*",
+  "buildOptions": {
+    "emitEntryPoint": true
+  },
   "dependencies": {
     "Flurl.Http": "1.0.0",
     "Newtonsoft.Json": "9.0.1",
