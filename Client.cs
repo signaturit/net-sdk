@@ -1,11 +1,13 @@
 ﻿using Flurl;
 using Flurl.Http;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Threading.Tasks;
 using Flurl.Http.Content;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Signaturit
 {
@@ -40,7 +42,7 @@ namespace Signaturit
             this.accessToken = accessToken;
             this.url         = production ? PROD_BASE_URL : SANDBOX_BASE_URL;
         }
-        
+
         /**
          * @param object $conditions
          *
@@ -90,9 +92,9 @@ namespace Signaturit
          *
          * @return string
          */
-        public string downloadAuditTrail(string signatureId, string documentId)
+        public Stream downloadAuditTrail(string signatureId, string documentId)
         {
-            string response = stringRequest("get", $"signatures/{signatureId}/documents/{documentId}/download/audit_trail", null, null, null);
+            Stream response = streamRequest("get", $"signatures/{signatureId}/documents/{documentId}/download/audit_trail", null, null, null);
 
             return response;
         }
@@ -103,9 +105,9 @@ namespace Signaturit
          *
          * @return string
          */
-        public string downloadSignedDocument(string signatureId, string documentId)
+        public Stream downloadSignedDocument(string signatureId, string documentId)
         {
-            string response = stringRequest("get", $"signatures/{signatureId}/documents/{documentId}/download/signed", null, null, null);
+            Stream response = streamRequest("get", $"signatures/{signatureId}/documents/{documentId}/download/signed", null, null, null);
 
             return response;
         }
@@ -284,9 +286,9 @@ namespace Signaturit
          *
          * @return string
          */
-        public string downloadEmailAuditTrail(string emailId, string certificateId)
+        public Stream downloadEmailAuditTrail(string emailId, string certificateId)
         {
-            string response = stringRequest("get", $"emails/{emailId}/certificates/{certificateId}/download/audit_trail", null, null, null);
+            Stream response = streamRequest("get", $"emails/{emailId}/certificates/{certificateId}/download/audit_trail", null, null, null);
 
             return response;
         }
@@ -298,10 +300,26 @@ namespace Signaturit
          */
         private ExpandoObject dynamicToExpandoObject(object input)
         {
-            string json = JsonConvert.SerializeObject(input);
+            string json          = JsonConvert.SerializeObject(input);
             ExpandoObject output = JsonConvert.DeserializeObject<ExpandoObject>(json);
 
             return output;
+        }
+
+        /**
+         * @param string $method
+         * @param string $path
+         * @param object $query
+         * @param object $body
+         * @param object files
+         *
+         * @return Stream
+         */
+        private Stream streamRequest(string method, string path, object query, object body, object files)
+        {
+            Stream response = Request(method, path, query, body, files).ReceiveStream().Result;
+
+            return response;
         }
 
         /**
@@ -315,7 +333,7 @@ namespace Signaturit
          */
         private string stringRequest(string method, string path, object query, object body, object files)
         {
-            string response = Request(method, path, query, body, files).Result;
+            string response = Request(method, path, query, body, files).ReceiveString().Result;
 
             return response;
         }
@@ -346,7 +364,7 @@ namespace Signaturit
          *
          * @return Task<string>
          */
-        private async Task<string> Request(string method, string path, object query, object body, object files)
+        private async Task<HttpResponseMessage> Request(string method, string path, object query, object body, object files)
         {
             Url url = new Url($"{this.url}/v3/{path}");
 
@@ -354,17 +372,17 @@ namespace Signaturit
                 .SetQueryParams(query)
                 .WithOAuthBearerToken(this.accessToken)
                 .WithHeader("User-Agent", "signaturit-net-sdk 1.0.0");
-            
+
             switch (method)
             {
                 case "get":
-                    return await Request.GetAsync().ReceiveString();
+                    return await Request.GetAsync();
 
                 case "post":
                     if (files == null) {
                         body = body == null ? new {} : body;
 
-                        return await Request.PostJsonAsync(body as object).ReceiveString();
+                        return await Request.PostJsonAsync(body as object);
                     }
 
                     var content = new CapturedMultipartContent();
@@ -380,12 +398,12 @@ namespace Signaturit
 
                     captureMultipartContentInObject(content, body, "");
 
-                    return await Request.PostAsync(content).ReceiveString();
+                    return await Request.PostAsync(content);
 
                 case "patch":
                     body = body == null ? new {} : body;
 
-                    return await Request.PatchJsonAsync(body as object).ReceiveString();
+                    return await Request.PatchJsonAsync(body as object);
             }
 
             return null;
