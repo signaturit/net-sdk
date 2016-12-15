@@ -529,6 +529,194 @@ namespace Signaturit
         }
 
         /**
+         * @param int $limit
+         * @param int $offset
+         *
+         * @return dynamic
+         */
+        public object getUsers(int limit = 100, int offset = 0)
+        {
+            object conditions = new { limit = limit, offset = offset };
+
+            dynamic json = jsonRequest("get", "team/users.json", conditions, null, null);
+
+            return json;
+        }
+
+        /**
+         * @param string $userId
+         *
+         * @return dynamic
+         */
+        public object getUser(string userId)
+        {
+            dynamic json = jsonRequest("get", $"team/users/{userId}.json", null, null, null);
+
+            return json;
+        }
+
+        /**
+         * @param string $email
+         * @param string $role
+         *
+         * @return dynamic
+         */
+        public object inviteUser(string email, string role)
+        {
+            object parameters = new { email = email, role = role };
+
+            dynamic json = jsonRequest("post", "team/users.json", null, parameters, null);
+
+            return json;
+        }
+
+        /**
+         * @param string $userId
+         * @param string $role
+         *
+         * @return dynamic
+         */
+        public object changeUserRole(string userId, string role)
+        {
+            object parameters = new { role = role };
+
+            dynamic json = jsonRequest("patch", $"team/users/{userId}.json", null, parameters, null);
+
+            return json;
+        }
+
+        /**
+         * @param string $userId
+         *
+         * @return dynamic
+         */
+        public object removeUser(string userId)
+        {
+            dynamic json = jsonRequest("delete", $"team/users/{userId}.json", null, null, null);
+
+            return json;
+        }
+
+        /**
+         * @param int $limit
+         * @param int $offset
+         *
+         * @return dynamic
+         */
+        public object getGroups(int limit = 100, int offset = 0)
+        {
+            object conditions = new { limit = limit, offset = offset };
+
+            dynamic json = jsonRequest("get", "team/groups.json", conditions, null, null);
+
+            return json;
+        }
+        /**
+         * @param string $groupId
+         *
+         * @return dynamic
+         */
+        public object getGroup(string groupId)
+        {
+            dynamic json = jsonRequest("get", $"team/groups/{groupId}.json", null, null, null);
+
+            return json;
+        }
+
+        /**
+         * @param string $name
+         *
+         * @return dynamic
+         */
+        public object createGroup(string name)
+        {
+            object parameters = new { name = name };
+
+            dynamic json = jsonRequest("post", "team/groups.json", null, parameters, null);
+
+            return json;
+        }
+
+        /**
+         * @param string $groupId
+         * @param string $name
+         *
+         * @return dynamic
+         */
+        public object updateGroup(string groupId, string name)
+        {
+            object parameters = new { name = name };
+
+            dynamic json = jsonRequest("patch", $"team/groups/{groupId}.json", null, parameters, null);
+
+            return json;
+        }
+
+        /**
+         * @param string $groupId
+         *
+         * @return dynamic
+         */
+        public object deleteGroup(string groupId)
+        {
+            dynamic json = jsonRequest("delete", $"team/groups/{groupId}.json", null, null, null);
+
+            return json;
+        }
+
+        /**
+         * @param string $groupId
+         * @param string $userId
+         *
+         * @return dynamic
+         */
+        public object addManagerToGroup(string groupId, string userId)
+        {
+            dynamic json = jsonRequest("post", $"team/groups/{groupId}/managers/{userId}.json", null, null, null);
+
+            return json;
+        }
+
+        /**
+         * @param string $groupId
+         * @param string $userId
+         *
+         * @return dynamic
+         */
+        public object removeManagerFromGroup(string groupId, string userId)
+        {
+            dynamic json = jsonRequest("delete", $"team/groups/{groupId}/managers/{userId}.json", null, null, null);
+
+            return json;
+        }
+
+        /**
+         * @param string $groupId
+         * @param string $userId
+         *
+         * @return dynamic
+         */
+        public object addMemberToGroup(string groupId, string userId)
+        {
+            dynamic json = jsonRequest("post", $"team/groups/{groupId}/members/{userId}.json", null, null, null);
+
+            return json;
+        }
+
+        /**
+         * @param string $groupId
+         * @param string $userId
+         *
+         * @return dynamic
+         */
+        public object removeMemberFromGroup(string groupId, string userId)
+        {
+            dynamic json = jsonRequest("delete", $"team/groups/{groupId}/members/{userId}.json", null, null, null);
+
+            return json;
+        }
+
+        /**
          * @param object input
          *
          * @return ExpandoObject
