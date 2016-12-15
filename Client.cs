@@ -294,6 +294,81 @@ namespace Signaturit
         }
 
         /**
+         * @param object $conditions
+         *
+         * @return dynamic
+         */
+        public int countSMS(object conditions = null)
+        {
+            dynamic json = jsonRequest("get", "sms/count.json", conditions, null, null);
+
+            return json.count;
+        }
+
+        /**
+         * @param int     $limit
+         * @param int     $offset
+         * @param dynamic $conditions
+         *
+         * @return dynamic
+         */
+        public object getSMS(int limit = 100, int offset = 0, dynamic conditions = null)
+        {
+            conditions = conditions == null ? new ExpandoObject() : dynamicToExpandoObject(conditions);
+
+            conditions.limit  = limit;
+            conditions.offset = offset;
+
+            dynamic json = jsonRequest("get", "sms.json", conditions, null, null);
+
+            return json;
+        }
+        /**
+         * @param string $smsId
+         *
+         * @return dynamic
+         */
+        public object getSMS(string smsId)
+        {
+            dynamic json = jsonRequest("get", $"sms/{smsId}.json", null, null, null);
+
+            return json;
+        }
+
+        /**
+         * @param dynamic $attachments
+         * @param dynamic $recipients
+         * @param string  $body
+         * @param dynamic $parameters
+         *
+         * @return dynamic
+         */
+        public object createSMS(object attachments, dynamic recipients, string body, dynamic parameters = null)
+        {
+            parameters = parameters == null ? new ExpandoObject() : dynamicToExpandoObject(parameters);
+
+            parameters.body       = body;
+            parameters.recipients = recipients;
+
+            dynamic json = jsonRequest("post", "sms.json", null, parameters, attachments);
+
+            return json;
+        }
+
+        /**
+         * @param string $smsId
+         * @param string $certificateId
+         *
+         * @return string
+         */
+        public Stream downloadSMSAuditTrail(string smsId, string certificateId)
+        {
+            Stream response = streamRequest("get", $"sms/{smsId}/certificates/{certificateId}/download/audit_trail", null, null, null);
+
+            return response;
+        }
+
+        /**
          * @param object input
          *
          * @return ExpandoObject
