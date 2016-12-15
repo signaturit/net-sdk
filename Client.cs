@@ -373,9 +373,9 @@ namespace Signaturit
          *
          * @return dynamic
          */
-        public int countContacts(object conditions = null)
+        public int countSubscriptions(object conditions = null)
         {
-            dynamic json = jsonRequest("get", "contacts/count.json", conditions, null, null);
+            dynamic json = jsonRequest("get", "subscriptions/count.json", conditions, null, null);
 
             return json.count;
         }
@@ -384,6 +384,87 @@ namespace Signaturit
          * @param int     $limit
          * @param int     $offset
          * @param dynamic $conditions
+         *
+         * @return dynamic
+         */
+        public object getSubscriptions(int limit = 100, int offset = 0, dynamic conditions = null)
+        {
+            conditions = conditions == null ? new ExpandoObject() : dynamicToExpandoObject(conditions);
+
+            conditions.limit  = limit;
+            conditions.offset = offset;
+
+            dynamic json = jsonRequest("get", "subscriptions.json", conditions, null, null);
+
+            return json;
+        }
+        /**
+         * @param string $subscriptionId
+         *
+         * @return dynamic
+         */
+        public object getSubscription(string subscriptionId)
+        {
+            dynamic json = jsonRequest("get", $"subscriptions/{subscriptionId}.json", null, null, null);
+
+            return json;
+        }
+
+        /**
+         * @param string $url
+         * @param object $events
+         *
+         * @return dynamic
+         */
+        public object createSubscription(string url, object events)
+        {
+            object parameters = new { url = url, events = events };
+
+            dynamic json = jsonRequest("post", "subscriptions.json", null, parameters, null);
+
+            return json;
+        }
+
+        /**
+         * @param string $subscriptionId
+         * @param object $parameters
+         *
+         * @return dynamic
+         */
+        public object updateSubscription(string subscriptionId, object parameters = null)
+        {
+            dynamic json = jsonRequest("patch", $"subscriptions/{subscriptionId}.json", null, parameters, null);
+
+            return json;
+        }
+
+        /**
+         * @param string $subscriptionId
+         *
+         * @return dynamic
+         */
+        public object deleteSubscription(string subscriptionId)
+        {
+            dynamic json = jsonRequest("delete", $"subscriptions/{subscriptionId}.json", null, null, null);
+
+            return json;
+        }
+
+        /**
+         * @param object $conditions
+         *
+         * @return dynamic
+         */
+        public int countContacts(object conditions = null)
+        {
+            dynamic json = jsonRequest("get", "contacts/count.json", conditions, null, null);
+
+            return json.count;
+        }
+
+        /**
+         * @param int $limit
+         * @param int $offset
          *
          * @return dynamic
          */
@@ -408,10 +489,8 @@ namespace Signaturit
         }
 
         /**
-         * @param dynamic $attachments
-         * @param dynamic $recipients
-         * @param string  $body
-         * @param dynamic $parameters
+         * @param string $email
+         * @param string $name
          *
          * @return dynamic
          */
