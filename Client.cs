@@ -369,6 +369,87 @@ namespace Signaturit
         }
 
         /**
+         * @param object $conditions
+         *
+         * @return dynamic
+         */
+        public int countContacts(object conditions = null)
+        {
+            dynamic json = jsonRequest("get", "contacts/count.json", conditions, null, null);
+
+            return json.count;
+        }
+
+        /**
+         * @param int     $limit
+         * @param int     $offset
+         * @param dynamic $conditions
+         *
+         * @return dynamic
+         */
+        public object getContacts(int limit = 100, int offset = 0)
+        {
+            object conditions = new { limit = limit, offset = offset };
+
+            dynamic json = jsonRequest("get", "contacts.json", conditions, null, null);
+
+            return json;
+        }
+        /**
+         * @param string $contactId
+         *
+         * @return dynamic
+         */
+        public object getContact(string contactId)
+        {
+            dynamic json = jsonRequest("get", $"contacts/{contactId}.json", null, null, null);
+
+            return json;
+        }
+
+        /**
+         * @param dynamic $attachments
+         * @param dynamic $recipients
+         * @param string  $body
+         * @param dynamic $parameters
+         *
+         * @return dynamic
+         */
+        public object createContact(string email, string name)
+        {
+            object parameters = new { email = email, name = name };
+
+            dynamic json = jsonRequest("post", "contacts.json", null, parameters, null);
+
+            return json;
+        }
+
+        /**
+         * @param string $contactId
+         * @param object $parameters
+         *
+         * @return dynamic
+         */
+        public object updateContact(string contactId, object parameters = null)
+        {
+            dynamic json = jsonRequest("patch", $"contacts/{contactId}.json", null, parameters, null);
+
+            return json;
+        }
+
+        /**
+         * @param string $contactId
+         *
+         * @return dynamic
+         */
+        public object deleteContact(string contactId)
+        {
+            dynamic json = jsonRequest("delete", $"contacts/{contactId}.json", null, null, null);
+
+            return json;
+        }
+
+        /**
          * @param object input
          *
          * @return ExpandoObject
@@ -479,6 +560,9 @@ namespace Signaturit
                     body = body == null ? new {} : body;
 
                     return await Request.PatchJsonAsync(body as object);
+
+                case "delete":
+                    return await Request.DeleteAsync();
             }
 
             return null;
