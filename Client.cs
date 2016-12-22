@@ -611,6 +611,7 @@ namespace Signaturit
 
             return json;
         }
+
         /**
          * @param string $groupId
          *
@@ -717,6 +718,33 @@ namespace Signaturit
         }
 
         /**
+         * @param int $limit
+         * @param int $offset
+         *
+         * @return dynamic
+         */
+        public object getSeats(int limit = 100, int offset = 0)
+        {
+            object conditions = new { limit = limit, offset = offset };
+
+            dynamic json = jsonRequest("get", "team/seats.json", conditions, null, null);
+
+            return json;
+        }
+
+        /**
+         * @param string $seatId
+         *
+         * @return dynamic
+         */
+        public object removeSeat(string seatId)
+        {
+            dynamic json = jsonRequest("delete", $"team/seats/{seatId}.json", null, null, null);
+
+            return json;
+        }
+
+        /**
          * @param object input
          *
          * @return ExpandoObject
@@ -794,7 +822,7 @@ namespace Signaturit
             FlurlClient Request = url
                 .SetQueryParams(query)
                 .WithOAuthBearerToken(this.accessToken)
-                .WithHeader("User-Agent", "signaturit-net-sdk 1.0.0");
+                .WithHeader("User-Agent", "signaturit-net-sdk 1.1.0");
 
             switch (method)
             {
