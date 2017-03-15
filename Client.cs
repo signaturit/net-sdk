@@ -900,8 +900,12 @@ namespace Signaturit
                     string valueKey = key == "" ? property.Name : $"{key}[{property.Name}]";
                     valueKey += $"[{index++}]";
 
-                    foreach (JToken subChild in child) {
-                        captureMultipartContentInJson(content, subChild, valueKey);
+                    if (child.GetType().Name == "JValue") {
+                        content.AddString(valueKey, $"{child}");
+                    } else {
+                        foreach (JToken subChild in child) {
+                            captureMultipartContentInJson(content, subChild, valueKey);
+                        }
                     }
                 }
 
