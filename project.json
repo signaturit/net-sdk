@@ -3,7 +3,7 @@
     "Signaturit"
   ],
   "description": "Signaturit SDK",
-  "version": "0.9.13-*",
+  "version": "0.9.14-*",
   "buildOptions": {
     "emitEntryPoint": true
   },
