@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Text;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -840,11 +841,11 @@ namespace Signaturit
 
                     foreach (string file in files as IList<string>)
                     {
-                        string name = System.IO.Path.GetFileName(file);
+                        string name = convertToAscii(System.IO.Path.GetFileName(file));
                         string ext  = System.IO.Path.GetExtension(file);
-                        string mime = ext == "pdf" ? "application/pdf" : "application/msword";
+                        string mime = ext == ".pdf" ? "application/pdf" : "application/msword";
 
-                        content.AddFile($"files[{name}]", file, mime);
+                        content.AddFile($"files[{name}]", File.OpenRead(file), name, mime);
                     }
 
                     captureMultipartContentInObject(content, body, "");
@@ -861,6 +862,13 @@ namespace Signaturit
             }
 
             return null;
+        }
+
+        private string convertToAscii(string text)
+        {
+            Encoding utf8 = Encoding.UTF8;
+            Encoding ascii = Encoding.ASCII;
+            return ascii.GetString(Encoding.Convert(utf8, ascii, utf8.GetBytes(text)));
         }
 
         /**

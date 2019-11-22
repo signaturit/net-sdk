@@ -1,7 +1,3 @@
-========================
-DO NOT USE MASTER BRANCH
-========================
-
 Signaturit NET SDK
 ==================
 This package is a NET wrapper around the Signaturit API. If you didn't read the documentation yet, maybe it's time to take a look [here](https://docs.signaturit.com/).
