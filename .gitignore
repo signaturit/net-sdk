@@ -1,3 +1,7 @@
+.idea
 .vscode
-bin/
-obj/
+.scannerwork
+.sonarqube
+bin
+obj
+coverage.opencover.xml

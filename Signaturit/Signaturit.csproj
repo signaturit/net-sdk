@@ -4,18 +4,18 @@
     <Description>Signaturit SDK</Description>
     <VersionPrefix>0.9.14</VersionPrefix>
     <Authors>Signaturit</Authors>
-    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>net-sdk</AssemblyName>
     <OutputType>Library</OutputType>
     <PackageId>net-sdk</PackageId>
-    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Flurl.Http" Version="1.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
-    <PackageReference Include="System.Collections.Specialized" Version="4.0.1" />
+    <PackageReference Include="System.Collections.Specialized" Version="4.3.0" />
   </ItemGroup>
 
 </Project>

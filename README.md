@@ -1,3 +1,5 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=signaturit_net-sdk&metric=alert_status&token=afc818be575d17db0a4170c1b4576967fa9e3798)](https://sonarcloud.io/dashboard?id=signaturit_net-sdk)
+
 ========================
 DO NOT USE MASTER BRANCH
 ========================
@@ -5,6 +7,29 @@ DO NOT USE MASTER BRANCH
 Signaturit NET SDK
 ==================
 This package is a NET wrapper around the Signaturit API. If you didn't read the documentation yet, maybe it's time to take a look [here](https://docs.signaturit.com/).
+
+Test
+----
+
+In order to execute the test suite:
+
+```
+dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat="opencover"
+```
+
+To upload the information to Sonarqube:
+
+```
+dotnet tool install --global dotnet-sonarscanner --version 4.7.1
+
+dotnet sonarscanner begin /o:"signaturit" /k:signaturit_net-sdk /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="YOUR_TOKEN" /s:"$(PWD)/SonarQube.Analysis.xml"
+
+dotnet build
+
+dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat="opencover"
+
+dotnet sonarscanner end /d:sonar.login="YOUR_TOKEN"
+```
 
 Configuration
 -------------
