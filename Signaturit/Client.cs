@@ -842,7 +842,7 @@ namespace Signaturit
                     {
                         string name = System.IO.Path.GetFileName(file);
                         string ext  = System.IO.Path.GetExtension(file);
-                        string mime = ext == "pdf" ? "application/pdf" : "application/msword";
+                        string mime = ext == ".pdf" ? "application/pdf" : "application/msword";
 
                         content.AddFile($"files[{name}]", file, mime);
                     }
