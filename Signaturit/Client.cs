@@ -847,7 +847,10 @@ namespace Signaturit
                         content.AddFile($"files[{name}]", file, mime);
                     }
 
-                    captureMultipartContentInObject(content, body, "");
+                    var json = JsonConvert.SerializeObject(body);
+                    JToken token = JToken.Parse(json);
+
+                    addToContent(content, token, "");
 
                     return await Request.PostAsync(content);
 
@@ -865,69 +868,43 @@ namespace Signaturit
 
         /**
          * @param CapturedMultipartContent $content
-         * @param object                   $body
-         * @param string                   $key
+         * @param JToken $token
+         * @param string $prefix
          */
-        private void captureMultipartContentInObject(CapturedMultipartContent content, object body, string key)
+        private static void addToContent(CapturedMultipartContent content, JToken token, string prefix)
         {
-            var data = JsonConvert.SerializeObject(body);
-            var json = JObject.Parse(data);
+            switch (token.Type)
+            {
+                case JTokenType.Object:
+                    foreach (JProperty prop in token.Children<JProperty>())
+                    {
+                        var name = prop.Name;
+                        var key = string.IsNullOrEmpty(prefix) ? name : $"{prefix}[{name}]";
 
-            foreach (JToken child in json.Children()) {
-                var property = child as JProperty;
-
-                captureMultipartContentInJson(content, child, "");
-            }
-        }
-
-        /**
-         * @param CapturedMultipartContent $content
-         * @param JToken                   $json
-         * @param string                   $key
-         */
-        private void captureMultipartContentInJson(CapturedMultipartContent content, JToken json, string key)
-        {
-            var property = json as JProperty;
-
-            if (property == null) {
-                return;
-            }
-
-            if (property.Value.GetType().Name == "JArray") {
-                int index = 0;
-
-                foreach (JToken child in property.Values()) {
-                    string valueKey = key == "" ? property.Name : $"{key}[{property.Name}]";
-                    valueKey += $"[{index++}]";
-
-                    if (child.GetType().Name == "JValue") {
-                        content.AddString(valueKey, $"{child}");
-                    } else {
-                        foreach (JToken subChild in child) {
-                            captureMultipartContentInJson(content, subChild, valueKey);
-                        }
+                        addToContent(content, prop.Value, key);
                     }
-                }
 
-                return;
-            }
+                    break;
 
-            if (property.Value.GetType().Name == "JObject") {
-                string valueKey = key == "" ? property.Name : $"{key}[{property.Name}]";
+                case JTokenType.Array:
+                    int index = 0;
 
-                foreach (JToken child in property.Values()) {
-                    captureMultipartContentInJson(content, child, valueKey);
-                }
+                    foreach (JToken value in token.Children())
+                    {
+                        var name = index.ToString();
+                        var key = string.IsNullOrEmpty(prefix) ? name : $"{prefix}[{name}]";
 
-                return;
-            }
+                        addToContent(content, value, key);
 
-            if (property.Value.GetType().Name == "JValue") {
-                string valueKey = key == "" ? property.Name : $"{key}[{property.Name}]";
+                        index++;
+                    }
 
-                content.AddString(valueKey, property.Value.ToString());
+                    break;
 
-                return;
+                default:
+                    content.AddString(prefix, token.ToString());
+
+                    break;
             }
         }
     }
