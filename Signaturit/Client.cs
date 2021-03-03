@@ -823,7 +823,7 @@ namespace Signaturit
             FlurlClient Request = url
                 .SetQueryParams(query)
                 .WithOAuthBearerToken(this.accessToken)
-                .WithHeader("User-Agent", "signaturit-net-sdk 1.1.0");
+                .WithHeader("User-Agent", "signaturit-net-sdk 1.1.1");
 
             switch (method)
             {
